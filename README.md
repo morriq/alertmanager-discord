@@ -1,4 +1,7 @@
-alertmanager-discord
+# alertmanager-discord (arm64)
+
+docker buildx build --platform linux/arm64 -t morriq/alertmanager-discord --push .
+
 ===
 
 Give this a webhook (with the DISCORD_WEBHOOK environment variable) and point it as a webhook on alertmanager, and it will post your alerts into a discord channel for you as they trigger:
@@ -14,11 +17,11 @@ The standard "dataflow" should be:
 ```
 Prometheus -------------> alertmanager -------------------> alertmanager-discord
 
-alerting:                 receivers:                         
+alerting:                 receivers:
   alertmanagers:          - name: 'discord_webhook'         environment:
   - static_configs:         webhook_configs:                   - DISCORD_WEBHOOK=https://discordapp.com/api/we...
-    - targets:              - url: 'http://localhost:9094'  
-       - 127.0.0.1:9093   
+    - targets:              - url: 'http://localhost:9094'
+       - 127.0.0.1:9093
 
 
 
@@ -37,7 +40,7 @@ global:
   smtp_auth_password: 'password'
 
 # The directory from which notification templates are read.
-templates: 
+templates:
 - '/etc/alertmanager/template/*.tmpl'
 
 # The root route on which each incoming alert enters.
@@ -45,7 +48,7 @@ route:
   group_by: ['alertname']
   group_wait: 20s
   group_interval: 5m
-  repeat_interval: 3h 
+  repeat_interval: 3h
   receiver: discord_webhook
 
 receivers:

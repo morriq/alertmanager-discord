@@ -1,7 +1,7 @@
 # Built following https://medium.com/@chemidy/create-the-smallest-and-secured-golang-docker-image-based-on-scratch-4752223b7324
 
 # STEP 1 build executable binary
-FROM golang:alpine as builder
+FROM --platform=$TARGETPLATFORM golang:alpine as builder
 # Install SSL ca certificates
 RUN apk update && apk add git && apk add ca-certificates
 # Create appuser
@@ -16,7 +16,7 @@ RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -ldflags="-w -s" -o 
 
 # STEP 2 build a small image
 # start from scratch
-FROM scratch
+FROM --platform=$TARGETPLATFORM scratch
 COPY --from=builder /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
 COPY --from=builder /etc/passwd /etc/passwd
 # Copy our static executable
